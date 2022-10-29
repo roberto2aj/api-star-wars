@@ -1,5 +1,7 @@
 package br.com.roberto2aj.apistarwars.planet;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +33,17 @@ public class PlanetController {
 			@Parameter(description = "id of planet to be loaded")
 			@PathVariable Integer id) {
 		return service.loadPlanet(id);
+	}
+
+	@Operation(summary = "Lists every planet loaded into the database.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Everything is fine.",
+					content = { @Content(mediaType = "application/json",
+					schema = @Schema(implementation = Planet.class)) })
+			})
+	@GetMapping("/")
+	public List<Planet> listPlanets() {
+		return service.findAllPlanets();
 	}
 
 	@Operation(summary = "Searches for a planet in the database by its id and returns it.")

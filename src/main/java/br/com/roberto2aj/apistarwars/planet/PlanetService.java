@@ -1,5 +1,7 @@
 package br.com.roberto2aj.apistarwars.planet;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +36,10 @@ public class PlanetService {
 	public Planet findPlanetByName(String name) {
 		return repository.findByName(name)
 				.orElseThrow(() -> new PlanetNotFoundException());
+	}
+
+	public List<Planet> findAllPlanets() {
+		return repository.findAll();
 	}
 
 }

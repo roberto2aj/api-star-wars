@@ -1,7 +1,5 @@
 package br.com.roberto2aj.apistarwars.planet;
 
-import java.awt.print.Book;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +23,7 @@ public class PlanetController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Found the planet.",
 					content = { @Content(mediaType = "application/json",
-					schema = @Schema(implementation = Book.class)) }),
+					schema = @Schema(implementation = Planet.class)) }),
 			@ApiResponse(responseCode = "404", description = "Planet not found",
 					content = @Content) })
 	@GetMapping("/load/{id}")
@@ -35,18 +33,32 @@ public class PlanetController {
 		return service.loadPlanet(id);
 	}
 
-	@Operation(summary = "Searches for a planet in the database and returns it.")
+	@Operation(summary = "Searches for a planet in the database by its id and returns it.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Found the planet.",
 					content = { @Content(mediaType = "application/json",
-					schema = @Schema(implementation = Book.class)) }),
+					schema = @Schema(implementation = Planet.class)) }),
 			@ApiResponse(responseCode = "404", description = "Planet not found",
 					content = @Content) })
-	@GetMapping("{id}")
-	public Planet findPlanet(
+	@GetMapping("/id/{id}")
+	public Planet findPlanetById(
 			@Parameter(description = "id of planet to be searched for")
 			@PathVariable Integer id) {
-		return service.findPlanet(id);
+		return service.findPlanetById(id);
+	}
+
+	@Operation(summary = "Searches for a planet in the database by its name and returns it.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Found the planet.",
+					content = { @Content(mediaType = "application/json",
+					schema = @Schema(implementation = Planet.class)) }),
+			@ApiResponse(responseCode = "404", description = "Planet not found",
+					content = @Content) })
+	@GetMapping("/name/{name}")
+	public Planet findPlanetByName (
+			@Parameter(description = "Name of planet to be searched for")
+			@PathVariable String name) {
+		return service.findPlanetByName(name);
 	}
 
 }

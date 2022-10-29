@@ -26,8 +26,13 @@ public class PlanetService {
 		return planet;
 	}
 
-	public Planet findPlanet(Integer id) {
+	public Planet findPlanetById(Integer id) {
 		return repository.findById(id)
+				.orElseThrow(() -> new PlanetNotFoundException());
+	}
+
+	public Planet findPlanetByName(String name) {
+		return repository.findByName(name)
 				.orElseThrow(() -> new PlanetNotFoundException());
 	}
 

@@ -29,11 +29,11 @@ public class PlanetController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Found the planet.",
 					content = { @Content(mediaType = "application/json",
-					schema = @Schema(implementation = Planet.class)) }),
+					schema = @Schema(implementation = PlanetDto.class)) }),
 			@ApiResponse(responseCode = "404", description = "Planet not found",
 					content = @Content) })
 	@PutMapping("/{id}")
-	public Planet loadPlanet(
+	public PlanetDto loadPlanet(
 			@Parameter(description = "id of planet to be loaded")
 			@PathVariable Integer id) {
 		return service.loadPlanet(id);
@@ -43,10 +43,10 @@ public class PlanetController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Everything is fine.",
 					content = { @Content(mediaType = "application/json",
-					schema = @Schema(implementation = Planet.class)) })
+					schema = @Schema(implementation = PlanetDto.class)) })
 			})
 	@GetMapping("/")
-	public List<Planet> listPlanets() {
+	public List<PlanetDto> listPlanets() {
 		return service.findAllPlanets();
 	}
 
@@ -54,11 +54,11 @@ public class PlanetController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Found the planet.",
 					content = { @Content(mediaType = "application/json",
-					schema = @Schema(implementation = Planet.class)) }),
+					schema = @Schema(implementation = PlanetDto.class)) }),
 			@ApiResponse(responseCode = "404", description = "Planet not found",
 					content = @Content) })
 	@GetMapping("/{id}")
-	public Planet findPlanetById(
+	public PlanetDto findPlanetById(
 			@Parameter(description = "id of planet to be searched for")
 			@PathVariable Integer id) {
 		return service.findPlanetById(id);
@@ -68,11 +68,11 @@ public class PlanetController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Found the planet.",
 					content = { @Content(mediaType = "application/json",
-					schema = @Schema(implementation = Planet.class)) }),
+					schema = @Schema(implementation = PlanetDto.class)) }),
 			@ApiResponse(responseCode = "404", description = "Planet not found",
 					content = @Content) })
 	@GetMapping("/name/{name}")
-	public Planet findPlanetByName (
+	public PlanetDto findPlanetByName (
 			@Parameter(description = "Name of planet to be searched for")
 			@PathVariable String name) {
 		return service.findPlanetByName(name);

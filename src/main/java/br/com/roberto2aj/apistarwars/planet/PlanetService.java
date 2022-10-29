@@ -16,9 +16,10 @@ public class PlanetService {
 	@Autowired
 	private PlanetRepository repository;
 
-	public Planet loadPlanet(Integer id) {
-		return repository.findById(id)
+	public PlanetDto loadPlanet(Integer id) {
+		Planet planet = repository.findById(id)
 				.orElse(loadPlanetFromSwapi(id));
+		return convertToDto(planet);
 	}
 
 	private Planet loadPlanetFromSwapi(Integer id) {
@@ -28,18 +29,23 @@ public class PlanetService {
 		return planet;
 	}
 
-	public Planet findPlanetById(Integer id) {
+	public PlanetDto findPlanetById(Integer id) {
 		return repository.findById(id)
+				.map(this::convertToDto)
 				.orElseThrow(() -> new PlanetNotFoundException());
 	}
 
-	public Planet findPlanetByName(String name) {
+	public PlanetDto findPlanetByName(String name) {
 		return repository.findByName(name)
+				.map(this::convertToDto)
 				.orElseThrow(() -> new PlanetNotFoundException());
 	}
 
-	public List<Planet> findAllPlanets() {
-		return repository.findAll();
+	public List<PlanetDto> findAllPlanets() {
+		return repository.findAll()
+				.stream()
+				.map(this::convertToDto)
+				.toList();
 	}
 
 	// I have use 'deleteAllById' instead of 'deleteById'
@@ -50,4 +56,7 @@ public class PlanetService {
 		repository.deleteAllById(List.of(id));
 	}
 
+	private PlanetDto convertToDto(Planet planet) {
+		return new PlanetDto(planet.getName(), planet.getClimate(), planet.getTerrain());
+	}
 }

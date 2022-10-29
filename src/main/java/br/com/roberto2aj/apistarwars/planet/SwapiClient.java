@@ -13,8 +13,11 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import br.com.roberto2aj.apistarwars.exceptions.CommunicationException;
+import br.com.roberto2aj.apistarwars.exceptions.PlanetNotFoundException;
+
 @Component
-public class SwapiApi {
+public class SwapiClient {
 
 	public Planet loadPlanet(Integer id) {
 		try {
@@ -25,22 +28,15 @@ public class SwapiApi {
 					  .build();
 			HttpResponse<String> response = HttpClient.newBuilder()
 					  .build().send(request, BodyHandlers.ofString());
-
-			Gson gson = new GsonBuilder().create();
-			return gson.fromJson(response.body(), Planet.class);
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+			if (response.statusCode() == 200) {
+				Gson gson = new GsonBuilder().create();
+				return gson.fromJson(response.body(), Planet.class);
+			} else {
+				throw new PlanetNotFoundException();
+			}
+		} catch (URISyntaxException | InterruptedException | IOException e) {
+			throw new CommunicationException();
 		}
 	}
-	
+
 }

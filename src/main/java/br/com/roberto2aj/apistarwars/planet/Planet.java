@@ -11,6 +11,10 @@ public class Planet {
 	
 	private String name;
 
+	private String climate;
+
+	private String terrain;
+
 	public Integer getId() {
 		return id;
 	}
@@ -25,6 +29,22 @@ public class Planet {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getClimate() {
+		return climate;
+	}
+
+	public void setClimate(String climate) {
+		this.climate = climate;
+	}
+
+	public String getTerrain() {
+		return terrain;
+	}
+
+	public void setTerrain(String terrain) {
+		this.terrain = terrain;
 	}
 
 }

@@ -42,4 +42,12 @@ public class PlanetService {
 		return repository.findAll();
 	}
 
+	// I have use 'deleteAllById' instead of 'deleteById'
+	// because 'deleteById' throws an exception if the entity doesn't exist.
+	// I could check it before deletion, but then I would need to open a transaction
+	// which would add uneeded complexity.
+	public void deletePlanet(Integer id) {
+		repository.deleteAllById(List.of(id));
+	}
+
 }

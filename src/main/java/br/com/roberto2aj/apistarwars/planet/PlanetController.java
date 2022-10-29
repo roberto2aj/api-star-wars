@@ -3,8 +3,12 @@ package br.com.roberto2aj.apistarwars.planet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +32,7 @@ public class PlanetController {
 					schema = @Schema(implementation = Planet.class)) }),
 			@ApiResponse(responseCode = "404", description = "Planet not found",
 					content = @Content) })
-	@GetMapping("/load/{id}")
+	@PutMapping("/{id}")
 	public Planet loadPlanet(
 			@Parameter(description = "id of planet to be loaded")
 			@PathVariable Integer id) {
@@ -53,7 +57,7 @@ public class PlanetController {
 					schema = @Schema(implementation = Planet.class)) }),
 			@ApiResponse(responseCode = "404", description = "Planet not found",
 					content = @Content) })
-	@GetMapping("/id/{id}")
+	@GetMapping("/{id}")
 	public Planet findPlanetById(
 			@Parameter(description = "id of planet to be searched for")
 			@PathVariable Integer id) {
@@ -72,6 +76,19 @@ public class PlanetController {
 			@Parameter(description = "Name of planet to be searched for")
 			@PathVariable String name) {
 		return service.findPlanetByName(name);
+	}
+
+	@Operation(summary = "Delets a planet from the database by its Swapi id. If the planet does not exist"
+			+ ", nothing happens")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Planet does not exist (anymore).")
+			})
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@DeleteMapping("{id}")
+	public void deletePlanet(
+			@Parameter(description = "id of planet to be deleted")
+			@PathVariable Integer id) {
+		service.deletePlanet(id);
 	}
 
 }

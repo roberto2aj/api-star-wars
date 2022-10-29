@@ -1,8 +1,23 @@
 package br.com.roberto2aj.apistarwars.planet;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Planet {
 
+	@Id
+	private Integer id;
+	
 	private String name;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;

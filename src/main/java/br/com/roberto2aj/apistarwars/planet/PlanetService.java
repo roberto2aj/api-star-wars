@@ -9,7 +9,13 @@ public class PlanetService {
 	@Autowired
 	private SwapiApi api;
 
+	@Autowired
+	private PlanetRepository repository;
+
 	public Planet loadPlanet(Integer id) {
-		return api.loadPlanet(id);
+		var planet = api.loadPlanet(id);
+		planet.setId(id);
+		repository.save(planet);
+		return planet;
 	}
 }

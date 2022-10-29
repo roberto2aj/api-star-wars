@@ -1,7 +1,14 @@
 package br.com.roberto2aj.apistarwars.planet;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+
+import br.com.roberto2aj.apistarwars.film.Film;
 
 @Entity
 public class Planet {
@@ -14,6 +21,9 @@ public class Planet {
 	private String climate;
 
 	private String terrain;
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<Film> films;
 
 	public Integer getId() {
 		return id;
@@ -45,6 +55,14 @@ public class Planet {
 
 	public void setTerrain(String terrain) {
 		this.terrain = terrain;
+	}
+
+	public List<Film> getFilms() {
+		return films;
+	}
+
+	public void setFilms(List<Film> films) {
+		this.films = films;
 	}
 
 }

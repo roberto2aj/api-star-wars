@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.roberto2aj.apistarwars.planet.dto.PlanetDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -78,7 +79,7 @@ public class PlanetController {
 		return service.findPlanetByName(name);
 	}
 
-	@Operation(summary = "Delets a planet from the database by its Swapi id. If the planet does not exist"
+	@Operation(summary = "Deletes a planet from the database by its Swapi id. If the planet does not exist"
 			+ ", nothing happens")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Planet does not exist (anymore).")

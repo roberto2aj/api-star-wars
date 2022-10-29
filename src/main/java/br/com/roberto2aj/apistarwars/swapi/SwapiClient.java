@@ -1,4 +1,4 @@
-package br.com.roberto2aj.apistarwars.planet;
+package br.com.roberto2aj.apistarwars.swapi;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,11 +15,13 @@ import com.google.gson.GsonBuilder;
 
 import br.com.roberto2aj.apistarwars.exceptions.CommunicationException;
 import br.com.roberto2aj.apistarwars.exceptions.PlanetNotFoundException;
+import br.com.roberto2aj.apistarwars.film.dto.SwapiFilmDto;
+import br.com.roberto2aj.apistarwars.planet.dto.SwapiPlanetDto;
 
 @Component
 public class SwapiClient {
 
-	public Planet loadPlanet(Integer id) {
+	public SwapiPlanetDto loadPlanet(Integer id) {
 		try {
 			HttpRequest request = HttpRequest.newBuilder()
 					  .uri(new URI("https://swapi.dev/api/planets/" + id))
@@ -30,10 +32,26 @@ public class SwapiClient {
 					  .build().send(request, BodyHandlers.ofString());
 			if (response.statusCode() == 200) {
 				Gson gson = new GsonBuilder().create();
-				return gson.fromJson(response.body(), Planet.class);
+				return gson.fromJson(response.body(), SwapiPlanetDto.class);
 			} else {
 				throw new PlanetNotFoundException();
 			}
+		} catch (URISyntaxException | InterruptedException | IOException e) {
+			throw new CommunicationException();
+		}
+	}
+
+	public SwapiFilmDto loadFilm(String s) {
+		try {
+			HttpRequest request = HttpRequest.newBuilder()
+					  .uri(new URI(s))
+					  .version(HttpClient.Version.HTTP_2)
+					  .GET()
+					  .build();
+			HttpResponse<String> response = HttpClient.newBuilder()
+					  .build().send(request, BodyHandlers.ofString());
+			Gson gson = new GsonBuilder().create();
+			return gson.fromJson(response.body(), SwapiFilmDto.class);
 		} catch (URISyntaxException | InterruptedException | IOException e) {
 			throw new CommunicationException();
 		}

@@ -1,2 +1,0 @@
-checking if git PAT has been configurated correctly on my machine
-(sorry for this commit)

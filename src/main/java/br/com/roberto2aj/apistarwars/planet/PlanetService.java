@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.roberto2aj.apistarwars.exceptions.PlanetNotFoundException;
 import br.com.roberto2aj.apistarwars.film.Film;
@@ -73,12 +74,11 @@ public class PlanetService {
 				.toList();
 	}
 
-	// I have use 'deleteAllById' instead of 'deleteById'
-	// because 'deleteById' throws an exception if the entity doesn't exist.
-	// I could check it before deletion, but then I would need to open a transaction
-	// which would add uneeded complexity.
+	@Transactional
 	public void deletePlanet(Integer id) {
-		repository.deleteAllById(List.of(id));
+		if (repository.existsById(id)) {
+			repository.deleteById(id);
+		}
 	}
 
 	private PlanetDto convertToDto(Planet planet) {

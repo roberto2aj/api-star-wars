@@ -21,7 +21,21 @@ public class PlanetController {
 	private PlanetService service;
 
 	@Operation(summary = "Loads a planet by its Swapi id and saves it into the database."
-			+ "If the planet is already loaded into the database, just returns it.")
+			+ " If the planet is already loaded into the database, just returns it.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Found the planet.",
+					content = { @Content(mediaType = "application/json",
+					schema = @Schema(implementation = Book.class)) }),
+			@ApiResponse(responseCode = "404", description = "Planet not found",
+					content = @Content) })
+	@GetMapping("/load/{id}")
+	public Planet loadPlanet(
+			@Parameter(description = "id of planet to be loaded")
+			@PathVariable Integer id) {
+		return service.loadPlanet(id);
+	}
+
+	@Operation(summary = "Searches for a planet in the database and returns it.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Found the planet.",
 					content = { @Content(mediaType = "application/json",
@@ -29,9 +43,10 @@ public class PlanetController {
 			@ApiResponse(responseCode = "404", description = "Planet not found",
 					content = @Content) })
 	@GetMapping("{id}")
-	public Planet loadPlanet(
-			@Parameter(description = "id of planet to be loaded")
+	public Planet findPlanet(
+			@Parameter(description = "id of planet to be searched for")
 			@PathVariable Integer id) {
-		return service.loadPlanet(id);
+		return service.findPlanet(id);
 	}
+
 }

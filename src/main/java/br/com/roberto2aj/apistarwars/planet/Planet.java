@@ -1,5 +1,6 @@
 package br.com.roberto2aj.apistarwars.planet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -24,6 +25,10 @@ public class Planet {
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
 	private List<Film> films;
+
+	public Planet() {
+		films = new ArrayList<>();
+	}
 
 	public Integer getId() {
 		return id;

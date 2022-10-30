@@ -1,7 +1,7 @@
 HELP.md
 target/
 database/
-log/
+logs/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**

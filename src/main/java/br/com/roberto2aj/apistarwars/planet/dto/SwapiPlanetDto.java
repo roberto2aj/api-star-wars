@@ -1,5 +1,6 @@
 package br.com.roberto2aj.apistarwars.planet.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SwapiPlanetDto {
@@ -11,6 +12,10 @@ public class SwapiPlanetDto {
 	private String terrain;
 
 	private List<String> films;
+
+	public SwapiPlanetDto() {
+		films = new ArrayList<>();
+	}
 
 	public String getName() {
 		return name;

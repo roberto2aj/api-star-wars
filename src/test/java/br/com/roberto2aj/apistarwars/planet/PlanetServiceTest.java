@@ -16,8 +16,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import br.com.roberto2aj.apistarwars.exceptions.PlanetNotFoundException;
+import br.com.roberto2aj.apistarwars.film.Film;
+import br.com.roberto2aj.apistarwars.film.dto.FilmDto;
+import br.com.roberto2aj.apistarwars.film.dto.SwapiFilmDto;
 import br.com.roberto2aj.apistarwars.planet.dto.PlanetDto;
 import br.com.roberto2aj.apistarwars.planet.dto.SwapiPlanetDto;
+import br.com.roberto2aj.apistarwars.swapi.SwapiClient;
 
 public class PlanetServiceTest {
 
@@ -27,9 +31,14 @@ public class PlanetServiceTest {
 	@Mock
 	private PlanetRepository repository;
 
+	@Mock
+	private SwapiClient api;
+
 	private Planet planet;
 
 	private PlanetDto dto;
+
+	private SwapiPlanetDto swapiDto;
 
 	@BeforeEach
 	public void setUp() {
@@ -45,7 +54,62 @@ public class PlanetServiceTest {
 		planet.setName(name);
 
 		dto = new PlanetDto(name, climate, terrain, new ArrayList<>());
+
+		swapiDto = new SwapiPlanetDto();
+		swapiDto.setClimate(climate);
+		swapiDto.setTerrain(terrain);
+		swapiDto.setName(name);
+
+		swapiDto.getFilms().add("url/1");
+
 		MockitoAnnotations.openMocks(this);
+	}
+
+	@Test
+	public void loadPlanet_planetAlreadyLoaded() {
+		Integer id = planet.getId();
+		Mockito.when(repository.findById(id)).thenReturn(Optional.of(planet));
+		assertEquals(planetService.loadPlanet(id), dto);
+		Mockito.verify(api, times(0)).loadPlanet(id);
+	}
+
+	@Test
+	public void loadPlanet_planetNotLoaded() {
+		Integer id = planet.getId();
+		String title = "t";
+		String releaseDate = "r";
+		String director = "d";
+
+		Film film = new Film();
+		film.setId(id);
+		film.setDirector(director);
+		film.setReleaseDate(releaseDate);
+		film.setTitle(title);
+		planet.getFilms().add(film);
+
+		dto = new PlanetDto(planet.getName(), planet.getClimate(), planet.getTerrain(),
+				List.of(new FilmDto(title, director, releaseDate)));
+
+		SwapiFilmDto swapiFilmDto = new SwapiFilmDto();
+		swapiFilmDto.setDirector(director);
+		swapiFilmDto.setTitle(title);
+		swapiFilmDto.setReleaseDate(releaseDate);
+
+		Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(null));
+		Mockito.when(api.loadPlanet(id)).thenReturn(swapiDto);
+		Mockito.when(api.loadFilm(swapiDto.getFilms().get(0))).thenReturn(swapiFilmDto);
+
+		assertEquals(dto, planetService.loadPlanet(id));
+	}
+
+	@Test
+	public void loadPlanet_planetDoesNotExist() {
+		Integer id = 123;
+		Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(null));
+		Mockito.when(api.loadPlanet(id)).thenThrow(new PlanetNotFoundException());
+
+		assertThrows(PlanetNotFoundException.class, () -> planetService.loadPlanet(id));
+		Mockito.verify(api, times(1)).loadPlanet(id);
 	}
 
 	@Test

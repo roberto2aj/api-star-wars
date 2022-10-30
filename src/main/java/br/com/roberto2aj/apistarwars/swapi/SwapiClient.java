@@ -8,6 +8,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -20,6 +22,8 @@ import br.com.roberto2aj.apistarwars.planet.dto.SwapiPlanetDto;
 
 @Component
 public class SwapiClient {
+
+	Logger logger = LoggerFactory.getLogger(SwapiClient.class);
 
 	public SwapiPlanetDto loadPlanet(Integer id) {
 		try {
@@ -37,6 +41,8 @@ public class SwapiClient {
 				throw new PlanetNotFoundException();
 			}
 		} catch (URISyntaxException | InterruptedException | IOException e) {
+			logger.error("Communication error with Swapi");
+			logger.error(e.getMessage());
 			throw new CommunicationException();
 		}
 	}
@@ -53,6 +59,8 @@ public class SwapiClient {
 			Gson gson = new GsonBuilder().create();
 			return gson.fromJson(response.body(), SwapiFilmDto.class);
 		} catch (URISyntaxException | InterruptedException | IOException e) {
+			logger.error("Communication error with Swapi");
+			logger.error(e.getMessage());
 			throw new CommunicationException();
 		}
 	}

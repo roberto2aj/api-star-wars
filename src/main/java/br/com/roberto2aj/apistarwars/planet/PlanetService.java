@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +27,17 @@ public class PlanetService {
 	@Autowired
 	private PlanetRepository repository;
 
+	Logger logger = LoggerFactory.getLogger(PlanetService.class);
+
 	public PlanetDto loadPlanet(Integer id) {
+		logger.info("Checking if planet with id {} exists in database", id);
 		Optional<Planet> planetOpt = repository.findById(id);
+
 		if (planetOpt.isPresent()) {
+			logger.info("Planet with id {} already exists in database.", id);
 			return convertToDto(planetOpt.get());
 		}
+		logger.info("Loading planet with id {} from Swapi.", id);
 		return convertToDto(loadPlanetFromSwapi(id));
 	}
 
@@ -56,15 +64,23 @@ public class PlanetService {
 	}
 
 	public PlanetDto findPlanetById(Integer id) {
-		return repository.findById(id)
-				.map(this::convertToDto)
-				.orElseThrow(() -> new PlanetNotFoundException());
+		PlanetDto dto = repository.findById(id).map(this::convertToDto).orElse(null);
+		if (dto != null) {
+			logger.info("Planet with id {} found.");
+			return dto;
+		}
+		logger.info("Planet with id {} not found.");
+		throw new PlanetNotFoundException();
 	}
 
 	public PlanetDto findPlanetByName(String name) {
-		return repository.findByName(name)
-				.map(this::convertToDto)
-				.orElseThrow(() -> new PlanetNotFoundException());
+		PlanetDto dto = repository.findByName(name).map(this::convertToDto).orElse(null);
+		if (dto != null) {
+			logger.info("Planet with name \"{}\" found.");
+			return dto;
+		}
+		logger.info("Planet with name \"{}\" not found.");
+		throw new PlanetNotFoundException();
 	}
 
 	public List<PlanetDto> findAllPlanets() {
@@ -76,8 +92,13 @@ public class PlanetService {
 
 	@Transactional
 	public void deletePlanet(Integer id) {
+		logger.info("Checking if planet with id {} exists in database", id);
 		if (repository.existsById(id)) {
+			logger.info("Planet with id {} exists, starting deletion", id);	
 			repository.deleteById(id);
+			logger.info("Planet with id {} deleted.", id);
+		} else {
+			logger.info("Planet with id {} doesn't exist.", id);
 		}
 	}
 

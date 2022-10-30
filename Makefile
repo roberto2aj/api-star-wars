@@ -1,8 +1,9 @@
 build:
-	echo "Building Docker container"
-	docker build -t apistarwars .
-	echo "Container build successfully"
+	mvn clean package
+	mkdir apistarwars
+	mv test-reports ./apistarwars
+	cp ./target/api-star-wars-0.0.1.jar ./apistarwars/ApiStarWars.jar
+	rm -rf target
 run:
-	docker run -p 8080:8080 apistarwars
-
+	cd apistarwars && java -jar ./apistarwars.jar
 

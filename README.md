@@ -45,7 +45,7 @@ method: PUT
 url: localhost:8080/planets/10
 ```
 
-Response
+Response:
 ```
 status: 200
 content:

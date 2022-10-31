@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.roberto2aj.apistarwars.exceptions.PlanetNotFoundException;
+import br.com.roberto2aj.apistarwars.exceptions.EntityNotFoundException;
 import br.com.roberto2aj.apistarwars.film.Film;
 import br.com.roberto2aj.apistarwars.film.dto.FilmDto;
 import br.com.roberto2aj.apistarwars.film.dto.SwapiFilmDto;
@@ -47,8 +47,8 @@ public class PlanetService {
 		
 		List<Film> films = new ArrayList<>();
 		for (String s : dto.getFilms()) {
-			SwapiFilmDto filmDto = api.loadFilm(s);
 			Integer filmId = getFilmId(s);
+			SwapiFilmDto filmDto = api.loadFilm(filmId);
 			Film f = convertToEntity(filmDto, filmId);
 			films.add(f);
 		}
@@ -70,7 +70,7 @@ public class PlanetService {
 			return dto;
 		}
 		logger.info("Planet with id {} not found.");
-		throw new PlanetNotFoundException();
+		throw new EntityNotFoundException();
 	}
 
 	public PlanetDto findPlanetByName(String name) {
@@ -80,7 +80,7 @@ public class PlanetService {
 			return dto;
 		}
 		logger.info("Planet with name \"{}\" not found.");
-		throw new PlanetNotFoundException();
+		throw new EntityNotFoundException();
 	}
 
 	public List<PlanetDto> findAllPlanets() {

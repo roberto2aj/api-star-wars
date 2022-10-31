@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import br.com.roberto2aj.apistarwars.exceptions.PlanetNotFoundException;
+import br.com.roberto2aj.apistarwars.exceptions.EntityNotFoundException;
 import br.com.roberto2aj.apistarwars.film.Film;
 import br.com.roberto2aj.apistarwars.film.dto.FilmDto;
 import br.com.roberto2aj.apistarwars.film.dto.SwapiFilmDto;
@@ -97,7 +97,7 @@ public class PlanetServiceTest {
 
 		Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(null));
 		Mockito.when(api.loadPlanet(id)).thenReturn(swapiDto);
-		Mockito.when(api.loadFilm(swapiDto.getFilms().get(0))).thenReturn(swapiFilmDto);
+		Mockito.when(api.loadFilm(id)).thenReturn(swapiFilmDto);
 
 		assertEquals(dto, planetService.loadPlanet(id));
 	}
@@ -106,9 +106,9 @@ public class PlanetServiceTest {
 	public void loadPlanet_planetDoesNotExist() {
 		Integer id = 123;
 		Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(null));
-		Mockito.when(api.loadPlanet(id)).thenThrow(new PlanetNotFoundException());
+		Mockito.when(api.loadPlanet(id)).thenThrow(new EntityNotFoundException());
 
-		assertThrows(PlanetNotFoundException.class, () -> planetService.loadPlanet(id));
+		assertThrows(EntityNotFoundException.class, () -> planetService.loadPlanet(id));
 		Mockito.verify(api, times(1)).loadPlanet(id);
 	}
 
@@ -123,7 +123,7 @@ public class PlanetServiceTest {
 	public void findById_noPlanet() {
 		Integer id = planet.getId();
 		Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(null));
-		assertThrows(PlanetNotFoundException.class, () -> planetService.findPlanetById(id));
+		assertThrows(EntityNotFoundException.class, () -> planetService.findPlanetById(id));
 	}
 
 	@Test
@@ -137,7 +137,7 @@ public class PlanetServiceTest {
 	public void findByName_noPlanet() {
 		String name = planet.getName();
 		Mockito.when(repository.findByName(name)).thenReturn(Optional.ofNullable(null));
-		assertThrows(PlanetNotFoundException.class, () -> planetService.findPlanetByName(name));
+		assertThrows(EntityNotFoundException.class, () -> planetService.findPlanetByName(name));
 	}
 
 	@Test

@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ApiStarWarsExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(PlanetNotFoundException.class)
+	@ExceptionHandler(EntityNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	protected ResponseEntity<Object> handleNotFound(RuntimeException exception, WebRequest request) {
         return handleExceptionInternal(exception, exception.getMessage(), 

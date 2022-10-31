@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import br.com.roberto2aj.apistarwars.exceptions.CommunicationException;
-import br.com.roberto2aj.apistarwars.exceptions.PlanetNotFoundException;
+import br.com.roberto2aj.apistarwars.exceptions.EntityNotFoundException;
 import br.com.roberto2aj.apistarwars.film.dto.SwapiFilmDto;
 import br.com.roberto2aj.apistarwars.planet.dto.SwapiPlanetDto;
 
@@ -26,38 +26,31 @@ public class SwapiClient {
 	Logger logger = LoggerFactory.getLogger(SwapiClient.class);
 
 	public SwapiPlanetDto loadPlanet(Integer id) {
+		String json = loadEntity("planets", id);
+		Gson gson = new GsonBuilder().create();
+		return gson.fromJson(json, SwapiPlanetDto.class);
+	}
+
+	public SwapiFilmDto loadFilm(Integer id) {
+		String json = loadEntity("films", id);
+		Gson gson = new GsonBuilder().create();
+		return gson.fromJson(json, SwapiFilmDto.class);
+	}
+
+	public String loadEntity(String suffix, Integer id) {
 		try {
 			HttpRequest request = HttpRequest.newBuilder()
-					  .uri(new URI("https://swapi.dev/api/planets/" + id))
+					  .uri(new URI(String.format("https://swapi.dev/api/%s/%d", suffix, id)))
 					  .version(HttpClient.Version.HTTP_2)
 					  .GET()
 					  .build();
 			HttpResponse<String> response = HttpClient.newBuilder()
 					  .build().send(request, BodyHandlers.ofString());
 			if (response.statusCode() == 200) {
-				Gson gson = new GsonBuilder().create();
-				return gson.fromJson(response.body(), SwapiPlanetDto.class);
+				return response.body();
 			} else {
-				throw new PlanetNotFoundException();
+				throw new EntityNotFoundException();
 			}
-		} catch (URISyntaxException | InterruptedException | IOException e) {
-			logger.error("Communication error with Swapi");
-			logger.error(e.getMessage());
-			throw new CommunicationException();
-		}
-	}
-
-	public SwapiFilmDto loadFilm(String s) {
-		try {
-			HttpRequest request = HttpRequest.newBuilder()
-					  .uri(new URI(s))
-					  .version(HttpClient.Version.HTTP_2)
-					  .GET()
-					  .build();
-			HttpResponse<String> response = HttpClient.newBuilder()
-					  .build().send(request, BodyHandlers.ofString());
-			Gson gson = new GsonBuilder().create();
-			return gson.fromJson(response.body(), SwapiFilmDto.class);
 		} catch (URISyntaxException | InterruptedException | IOException e) {
 			logger.error("Communication error with Swapi");
 			logger.error(e.getMessage());

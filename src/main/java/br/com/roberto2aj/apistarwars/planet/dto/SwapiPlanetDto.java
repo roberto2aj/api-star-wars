@@ -3,6 +3,9 @@ package br.com.roberto2aj.apistarwars.planet.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class SwapiPlanetDto {
 
 	private String name;
@@ -47,6 +50,16 @@ public class SwapiPlanetDto {
 
 	public void setFilms(List<String> films) {
 		this.films = films;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 }

@@ -46,10 +46,11 @@ public class PlanetService {
 	private Planet loadPlanetFromSwapi(Integer id) {
 		SwapiPlanetDto dto = api.loadPlanet(id);
 		Planet planet = PlanetMapper.convertToEntity(dto, id);
-		
+
 		List<Film> films = new ArrayList<>();
-		for (String s : dto.getFilms()) {
-			Integer filmId = getFilmId(s);
+
+		List<Integer> filmIds = dto.getFilms().stream().map(this::getFilmId).toList();
+		for (Integer filmId : filmIds) {
 			Film f = loadFilm(filmId);
 			films.add(f);
 		}

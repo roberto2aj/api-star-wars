@@ -64,8 +64,6 @@ public class PlanetServiceTest {
 		swapiDto.setTerrain(terrain);
 		swapiDto.setName(name);
 
-		swapiDto.getFilms().add("url/1");
-
 		MockitoAnnotations.openMocks(this);
 	}
 
@@ -83,9 +81,11 @@ public class PlanetServiceTest {
 		String title = "t";
 		String releaseDate = "r";
 		String director = "d";
+		swapiDto.getFilms().add("url/2");
+		Integer filmId = 2;
 
 		Film film = new Film();
-		film.setId(id);
+		film.setId(filmId);
 		film.setDirector(director);
 		film.setReleaseDate(releaseDate);
 		film.setTitle(title);
@@ -100,9 +100,9 @@ public class PlanetServiceTest {
 		swapiFilmDto.setReleaseDate(releaseDate);
 
 		Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(null));
-		Mockito.when(filmRepository.findById(id)).thenReturn(Optional.ofNullable(null));
+		Mockito.when(filmRepository.findById(filmId)).thenReturn(Optional.ofNullable(null));
 		Mockito.when(api.loadPlanet(id)).thenReturn(swapiDto);
-		Mockito.when(api.loadFilm(id)).thenReturn(swapiFilmDto);
+		Mockito.when(api.loadFilm(filmId)).thenReturn(swapiFilmDto);
 
 		assertEquals(dto, planetService.loadPlanet(id));
 	}
@@ -113,9 +113,11 @@ public class PlanetServiceTest {
 		String title = "t";
 		String releaseDate = "r";
 		String director = "d";
+		swapiDto.getFilms().add("url/2");
+		Integer filmId = 2;
 
 		Film film = new Film();
-		film.setId(id);
+		film.setId(filmId);
 		film.setDirector(director);
 		film.setReleaseDate(releaseDate);
 		film.setTitle(title);
@@ -130,9 +132,9 @@ public class PlanetServiceTest {
 		swapiFilmDto.setReleaseDate(releaseDate);
 
 		Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(null));
-		Mockito.when(filmRepository.findById(id)).thenReturn(Optional.of(film));
+		Mockito.when(filmRepository.findById(filmId)).thenReturn(Optional.of(film));
 		Mockito.when(api.loadPlanet(id)).thenReturn(swapiDto);
-		Mockito.when(api.loadFilm(id)).thenReturn(swapiFilmDto);
+		Mockito.when(api.loadFilm(filmId)).thenReturn(swapiFilmDto);
 
 		assertEquals(dto, planetService.loadPlanet(id));
 	}

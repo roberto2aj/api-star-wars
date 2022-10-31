@@ -12,7 +12,7 @@ This project was written using:
 - H2 for database (embedded!)
 - make for build and run automation
 
-I choose not to use Lombok or StructMap as they usually come up with the need for specific IDE configuration so I opted for easiness of configuration.
+I have chosen not to use Lombok or StructMap as they usually come up with the need for specific IDE configuration so I opted for easiness of configuration.
 
 ## Requirements
 

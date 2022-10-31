@@ -1,5 +1,19 @@
 # api-star-wars
 
+This project is a small API that accesses [swapi](https://swapi.dev/) and saves part of its data into a local database for later access.
+
+This project was written using:
+- Java 17
+- Maven for dependency management
+- JUnit 5 for unit testing
+- Mockito for mocking
+- JaCoCo for generating test coverage reports
+- logback (and jackson) for structured logging
+- H2 for database (embedded!)
+- make for build and run automation
+
+I choose not to use Lombok or StructMap as they usually come up with the need for specific IDE configuration so I opted for easiness of configuration.
+
 ## Requirements
 
 In order to run this project you need:

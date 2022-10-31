@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 
 import br.com.roberto2aj.apistarwars.exceptions.EntityNotFoundException;
 import br.com.roberto2aj.apistarwars.film.Film;
+import br.com.roberto2aj.apistarwars.film.FilmRepository;
 import br.com.roberto2aj.apistarwars.film.dto.FilmDto;
 import br.com.roberto2aj.apistarwars.film.dto.SwapiFilmDto;
 import br.com.roberto2aj.apistarwars.planet.dto.PlanetDto;
@@ -30,6 +31,9 @@ public class PlanetServiceTest {
 
 	@Mock
 	private PlanetRepository repository;
+
+	@Mock
+	private FilmRepository filmRepository;
 
 	@Mock
 	private SwapiClient api;
@@ -74,7 +78,7 @@ public class PlanetServiceTest {
 	}
 
 	@Test
-	public void loadPlanet_planetNotLoaded() {
+	public void loadPlanet_planetNotLoaded_filmNotLoaded() {
 		Integer id = planet.getId();
 		String title = "t";
 		String releaseDate = "r";
@@ -96,6 +100,37 @@ public class PlanetServiceTest {
 		swapiFilmDto.setReleaseDate(releaseDate);
 
 		Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(null));
+		Mockito.when(filmRepository.findById(id)).thenReturn(Optional.ofNullable(null));
+		Mockito.when(api.loadPlanet(id)).thenReturn(swapiDto);
+		Mockito.when(api.loadFilm(id)).thenReturn(swapiFilmDto);
+
+		assertEquals(dto, planetService.loadPlanet(id));
+	}
+
+	@Test
+	public void loadPlanet_planetNotLoaded_filmLoaded() {
+		Integer id = planet.getId();
+		String title = "t";
+		String releaseDate = "r";
+		String director = "d";
+
+		Film film = new Film();
+		film.setId(id);
+		film.setDirector(director);
+		film.setReleaseDate(releaseDate);
+		film.setTitle(title);
+		planet.getFilms().add(film);
+
+		dto = new PlanetDto(planet.getName(), planet.getClimate(), planet.getTerrain(),
+				List.of(new FilmDto(title, director, releaseDate)));
+
+		SwapiFilmDto swapiFilmDto = new SwapiFilmDto();
+		swapiFilmDto.setDirector(director);
+		swapiFilmDto.setTitle(title);
+		swapiFilmDto.setReleaseDate(releaseDate);
+
+		Mockito.when(repository.findById(id)).thenReturn(Optional.ofNullable(null));
+		Mockito.when(filmRepository.findById(id)).thenReturn(Optional.of(film));
 		Mockito.when(api.loadPlanet(id)).thenReturn(swapiDto);
 		Mockito.when(api.loadFilm(id)).thenReturn(swapiFilmDto);
 

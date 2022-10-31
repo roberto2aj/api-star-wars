@@ -17,7 +17,7 @@ Download/clone this repository and enter it in the terminal.
 
 In order to build the application, execute `make build`. This will download some dependencies, run unit tests, generate a test report and build the application into a .jar.
 
-The .jar will be in new directory called "apistarwars" together with the test reports, which will be in a directory called "test-reports".
+The .jar will be in new directory called "apistarwars" together with the test reports, which will be in a directory called `test-reports`.
 
 In order to run it, execute `make run`. You could also cd directly into the application directory and execute `java -jar ApiStarWars.jar`.
 

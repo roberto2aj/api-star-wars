@@ -5,5 +5,5 @@ build:
 	cp ./target/api-star-wars-0.0.1.jar ./apistarwars/ApiStarWars.jar
 	rm -rf target
 run:
-	cd apistarwars && java -jar ./apistarwars.jar
+	cd apistarwars && java -jar ./ApiStarWars.jar
 
